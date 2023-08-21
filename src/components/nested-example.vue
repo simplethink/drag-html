@@ -56,7 +56,7 @@ export default {
     form: {
       deep: true,
       handler: function (val) {
-         let sel = this.selTask;
+        let sel = this.selTask;
         sel.css = util.objectToStyleString({
           ...util.cssToJs(sel.css),
           ...val,

@@ -1,18 +1,18 @@
 <template>
   <div id="app">
-     <HelloWorld msg="Welcome to Your Vue.js App" />
+    <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
 </template>
 
 <script>
 import HelloWorld from "./components/nested-example.vue";
-import Vue from 'vue';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-  
+import Vue from "vue";
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+
 Vue.use(ElementUI);
 
- export default {
+export default {
   name: "App",
   data() {
     return {
@@ -31,7 +31,7 @@ Vue.use(ElementUI);
     },
   },
   components: {
-     HelloWorld,
+    HelloWorld,
   },
 };
 </script>

@@ -22,55 +22,54 @@ export default class util {
 
     return null;
   }
-  static objectToStyleString = (obj)=> {
-    let styleString = '';
-  
+  static objectToStyleString = (obj) => {
+    let styleString = "";
+
     for (let key in obj) {
       // eslint-disable-next-line no-prototype-builtins
       if (obj.hasOwnProperty(key)) {
         let value = obj[key];
-        styleString += key + ': ' + value + ';\n';
+        styleString += key + ": " + value + ";\n";
       }
     }
-  
-    return styleString.trim(); // 删除末尾的额外空格
-  }
 
-  static cssToJs= (cssString)=> {
+    return styleString.trim(); // 删除末尾的额外空格
+  };
+
+  static cssToJs = (cssString) => {
     // 将CSS字符串分割成每个样式的数组
-    var cssArray = cssString.split(';');
-    
+    var cssArray = cssString.split(";");
+
     // 创建一个空对象来存储转换后的样式
     var cssObj = {};
-    
+
     // 遍历每个样式
     for (var i = 0; i < cssArray.length; i++) {
       // 去除样式字符串的空格
       var style = cssArray[i].trim();
-      
+
       // 确保样式不是空字符串
-      if (style !== '') {
+      if (style !== "") {
         // 分割样式属性和值
-        var parts = style.split(':');
-        
+        var parts = style.split(":");
+
         // 去除属性和值的空格
         var property = parts[0].trim();
         var value = parts[1].trim();
-        
+
         // 将样式属性和值添加到对象中
         cssObj[property] = value;
       }
     }
-    
+
     // 返回转换后的JavaScript对象
     return cssObj;
-  }
-   
-  
-  static formData  = {
-    display:{
-        default:[],
-        flex:[]
-    }
-  }
+  };
+
+  static formData = {
+    display: {
+      default: [],
+      flex: [],
+    },
+  };
 }
