@@ -69,7 +69,47 @@ export default class util {
   static formData = {
     display: {
       default: [],
-      flex: [],
+      flex: {
+        "flex-direction": ["row", "column"],
+        "flex-wrap": ["nowrap", "wrap"],
+        "align-content": [
+          "normal",
+          "center",
+          "flex-start",
+          "flex-end",
+          "space-around",
+          "space-between",
+        ],
+        "justify-content": [
+          "normal",
+          "center",
+          "flex-start",
+          "flex-end",
+          "space-around",
+          "space-between",
+          "space-evenly",
+        ],
+        "align-items": ["normal", "center", "flex-start", "flex-end"],
+      },
     },
+  };
+
+  static traverseObject = (obj,arr)=> {
+    for (const key in obj) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+
+        if (Array.isArray(value)) {
+          console.log(value); // 打印数组
+          arr.splice(-1,0,{key,value})
+        } else if (typeof value === "object" && value !== null) {
+          arr.splice(-1,0,{key,value:Object.keys(value)})
+          this.traverseObject(value,arr); // 递归遍历对象
+        } else if (value === "") {
+          console.log("Empty string"); // 打印空字符串
+        }
+      }
+    }
   };
 }

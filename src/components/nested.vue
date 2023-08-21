@@ -48,7 +48,7 @@ export default {
         ({ value }) => {
           console.log(value);
           let target = util.objectToStyleString({
-            ...el.css,
+            ...util.cssToJs(el.css),
             ...util.cssToJs(value),
           });
           util.eventbus.$emit("commit", { id: el.id, css: target });

@@ -5,16 +5,7 @@
       <nested-draggable :tasks="list" style="width: 375px; margin: auto" />
     </div>
     <div class="col-9">
-      <el-form ref="form" :model="form" label-width="80px">
-        {{ selTask.name }}
-        <el-form-item label="display">
-          <el-radio-group v-model="form.display">
-            <el-radio label="default"></el-radio>
-            <el-radio label="flex"></el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <pre v-html="selTask.css"></pre>
-      </el-form>
+      <myform @changeForm="changeForm" :selTask="selTask"></myform>
     </div>
   </div>
 </template>
@@ -22,11 +13,13 @@
 <script>
 import util from "../util";
 import nestedDraggable from "./nested.vue";
+import myform from "./myform.vue";
 export default {
   name: "nested-example",
   display: "Nested",
   order: 15,
   components: {
+    myform,
     nestedDraggable,
   },
   created() {
@@ -52,25 +45,21 @@ export default {
       return util.findNodeById(this.list, this.selIndex);
     },
   },
-  watch: {
-    form: {
-      deep: true,
-      handler: function (val) {
-        let sel = this.selTask;
-        sel.css = util.objectToStyleString({
-          ...util.cssToJs(sel.css),
-          ...val,
-        });
-        this.list = [...this.list];
-      },
+  methods: {
+    changeForm(val) {
+      let sel = this.selTask;
+      sel.css = util.objectToStyleString({
+        ...util.cssToJs(sel.css),
+        ...val,
+      });
+      this.list = [...this.list];
     },
   },
+
   data() {
     return {
       selIndex: 0,
-      form: {
-        display: "",
-      },
+
       list: [
         {
           name: "task 1",
