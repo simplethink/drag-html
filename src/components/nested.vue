@@ -1,11 +1,19 @@
 <template>
-  <draggable class="dragArea" tag="div" :list="tasks" :group="{ name: 'g1' }">
+  <draggable
+    class="dragArea"
+    tag="div"
+    chosen-class="chosen"
+    :list="tasks"
+    :group="{ name: 'g1' }"
+  >
     <div
       v-for="el in tasks"
       :key="el.name"
       :class="el.name"
+      :style="el.css"
+      @click.stop="selOne(el.id)"
       @dblclick.stop="handleDBC(el)"
-      @contextmenu.prevent.stop="handleContextMenu($event, el.name)"
+      @contextmenu.prevent.stop="handleContextMenu($event, el)"
     >
       <p>{{ el.name }}</p>
       <nested-draggable :tasks="el.tasks" />
@@ -32,16 +40,25 @@ export default {
     draggable,
   },
   methods: {
+    selOne(val) {
+      util.eventbus.$emit("selOne", val);
+    },
     handleDBC(el) {
-      this.$prompt("请输入css", el.name).then(({ value }) => {
-        console.log(value);
-        util.eventbus.$emit("commit", { id: el.id, css: value });
-      });
+      this.$prompt("请输入css", el.name, { inputValue: el.css }).then(
+        ({ value }) => {
+          console.log(value);
+          let target = util.objectToStyleString({
+            ...el.css,
+            ...util.cssToJs(value),
+          });
+          util.eventbus.$emit("commit", { id: el.id, css: target });
+        }
+      );
     },
     handleContextMenu(...event) {
       // event.preventDefault(); // 阻止默认的右键菜单弹出
       console.log(event, "Right-click event triggered");
-      this.$alert(event[1], "标题", {
+      this.$alert(event[1].name, "标题", {
         confirmButtonText: "确定",
         callback: (action) => {
           // 点击确定按钮后的回调函数
@@ -58,7 +75,11 @@ export default {
   min-height: 50px;
   outline: 1px dashed;
 }
-.task{
-  
+.task {
+}
+
+.chosen {
+  border: solid 2px #3089dc !important;
+  transition-delay: 0.5s;
 }
 </style>
