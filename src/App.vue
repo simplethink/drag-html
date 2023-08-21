@@ -1,19 +1,39 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+     <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from "./components/nested-example.vue";
+import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+  
+Vue.use(ElementUI);
 
-export default {
-  name: 'App',
+ export default {
+  name: "App",
+  data() {
+    return {
+      enabled: true,
+      list: [
+        { name: "John", id: 0 },
+        { name: "Joao", id: 1 },
+        { name: "Jean", id: 2 },
+      ],
+      dragging: false,
+    };
+  },
+  methods: {
+    checkMove: function (e) {
+      window.console.log("Future index: " + e.draggedContext.futureIndex);
+    },
+  },
   components: {
-    HelloWorld
-  }
-}
+     HelloWorld,
+  },
+};
 </script>
 
 <style>
