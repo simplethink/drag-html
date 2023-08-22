@@ -1,8 +1,12 @@
 <template>
   <div class="row">
+    <div class="save" @click="save">保存</div>
     <div class="col-8">
       <h3>Nested draggable</h3>
-      <nested-draggable :tasks="list" style="width: 375px; margin: auto;border:3px solid black" />
+      <nested-draggable
+        :tasks="list"
+        style="width: 375px; margin: auto; border: 3px solid black"
+      />
     </div>
     <div class="col-9">
       <myform @changeForm="changeForm" :selTask="selTask"></myform>
@@ -36,13 +40,11 @@ export default {
       //   return i.tasks?[i,...i.tasks]:[i]
       // })
       console.log(this.list);
-      this.list = this.list.map((element) => {
-        console.log(element);
-        if (element.id == o.id) {
-          element.css = o.css;
-        }
-        return element;
-      });
+      this.list = util.findAndCssIt(
+        { id: -1, tasks: [...this.list] },
+        o.id,
+        o.css
+      ).tasks;
     });
   },
   computed: {
@@ -51,6 +53,24 @@ export default {
     },
   },
   methods: {
+    save() {
+      let self = this;
+      console.log(this.list);
+      (function (s) {
+        document.oncopy = function (e) {
+          e.clipboardData.setData("text", s);
+          const h = self.$createElement;
+
+          self.$notify({
+            title: "标题名称",
+            message: h("i", { style: "color: teal" }, "已复制到剪切板。"),
+          });
+          e.preventDefault();
+          document.oncopy = null;
+        };
+      })(JSON.stringify(self.list));
+      document.execCommand("Copy");
+    },
     changeForm(val) {
       let sel = this.selTask;
       sel.css = util.objectToStyleString({
@@ -103,7 +123,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style  >
 .row {
   display: flex;
 
@@ -115,5 +135,14 @@ export default {
 }
 .col-8 {
   flex-grow: 1;
+}
+.save {
+  
+    position: absolute;
+    top: 0;
+    background: #cf4a00;
+    left: 0;
+    color: white;
+    padding: 0.4em;
 }
 </style>

@@ -6,18 +6,17 @@
     :list="tasks"
     :group="{ name: 'g1' }"
   >
-    <div
+    <nested-draggable
+    :tasks="el.tasks"
       v-for="el in tasks"
       :key="el.id"
       :class="el.name"
       :style="el.css"
-      @click.stop="selOne(el.id)"
-      @dblclick.stop="handleDBC(el)"
-      @contextmenu.prevent.stop="handleContextMenu($event, el)"
+      @click.native.stop="selOne(el.id)"
+      @dblclick.native.stop="handleDBC(el)"
+      @contextmenu.native.prevent.stop="handleContextMenu($event, el)"
     >
-      <!-- <p>{{ el.name }}</p> -->
-      <nested-draggable :tasks="el.tasks" />
-    </div>
+      </nested-draggable>
   </draggable>
 </template>
 <script>
@@ -64,14 +63,16 @@ export default {
   name: "nested-draggable",
 };
 </script>
-<style scoped>
+<style  >
 .dragArea {
   min-height: 50px;
   outline: 1px dashed;
 }
 .task {
-  margin-top:1em;  border: solid 1px transparent !important;
-
+  margin-top: 1em;
+  border: solid 1px transparent !important;
+  width: 40px;
+  /* height: 10px; */
 }
 
 .chosen {

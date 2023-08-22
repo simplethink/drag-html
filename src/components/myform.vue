@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form ref="form" :model="form" label-width="80px" size="mini">
-      {{ selTask.name }}
+      {{ "id:"+ selTask.id }}
       <el-form-item v-for="(i, index) in arr" :key="index" :label="i.key">
         <el-radio-group v-model="form[i.key]">
           <el-radio v-for="j in i.value" :key="j" :label="j"></el-radio>

@@ -67,21 +67,12 @@ export default class util {
   };
 
   static formData = {
+    width: { "100%": "", "40px": "" },
+    margin:{auto:'',unset:''},
     display: {
       block: [],
       flex: [
         { "flex-direction": { row: "", column: "" } },
-        { "flex-wrap": { nowrap: "", warp: "" } },
-        {
-          "align-content": {
-            normal: "",
-            center: "",
-            "flex-start": "",
-            "flex-end": "",
-            "space-around": "",
-            "space-between": "",
-          },
-        },
         {
           "justify-content": {
             normal: "",
@@ -99,6 +90,17 @@ export default class util {
             center: "",
             "flex-start": "",
             "flex-end": "",
+          },
+        },
+        { "flex-wrap": { nowrap: "", warp: "" } },
+        {
+          "align-content": {
+            normal: "",
+            center: "",
+            "flex-start": "",
+            "flex-end": "",
+            "space-around": "",
+            "space-between": "",
           },
         },
       ],
@@ -150,29 +152,55 @@ export default class util {
       return JSON.parse(JSON.stringify(o));
     }
     function deepCopyWithIdModification(obj) {
-      if (typeof obj !== 'object' || obj === null) {
+      if (typeof obj !== "object" || obj === null) {
         return obj;
       }
-    
+
       let copiedObject = Array.isArray(obj) ? [] : {};
-    
+
       for (let key in obj) {
         // eslint-disable-next-line no-prototype-builtins
         if (obj.hasOwnProperty(key)) {
           copiedObject[key] = deepCopyWithIdModification(obj[key]);
         }
       }
-    
+
       // 修改id
       // eslint-disable-next-line no-prototype-builtins
-      if (copiedObject.hasOwnProperty('id')) {
-        copiedObject.id = Date.now()
+      if (copiedObject.hasOwnProperty("id")) {
+        copiedObject.id = Date.now();
       }
-    
+
       return copiedObject;
     }
-    
-    
+
+    data = copyObj(data);
+    // 调用遍历函数
+    traverse(data, null, null);
+
+    // 返回修改后的数据
+    return data;
+  };
+  static findAndCssIt = function (data, id, css) {
+    // 递归遍历嵌套数据
+    function traverse(node) {
+      if (node.id === id) {
+        node.css = css;
+        return true;
+      }
+      if (node.tasks) {
+        for (let i = 0; i < node.tasks.length; i++) {
+          if (traverse(node.tasks[i], node.tasks, i)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    function copyObj(o) {
+      return JSON.parse(JSON.stringify(o));
+    }
+
     data = copyObj(data);
     // 调用遍历函数
     traverse(data, null, null);
