@@ -1,6 +1,7 @@
 <template>
   <div class="row">
     <div class="save" @click="save">保存</div>
+    <div class="save input" @click="input">输入</div>
     <div class="col-8">
       <h3>Nested draggable</h3>
       <nested-draggable
@@ -30,6 +31,11 @@ export default {
     util.eventbus.$on("selOne", (id) => {
       this.selIndex = id;
     });
+    util.eventbus.$on("delItem", (o) => {
+      let i = util.findAndCopyNode({ id: -1, tasks: [...this.list] }, o);
+      this.list = i.tasks;
+    });
+    
     util.eventbus.$on("复制", (o) => {
       let i = util.findAndCopyNode({ id: -1, tasks: [...this.list] }, o);
       this.list = i.tasks;
@@ -53,6 +59,16 @@ export default {
     },
   },
   methods: {
+    input() {
+      function getClipboardContent() {
+        return navigator.clipboard
+          .readText()
+      }
+      getClipboardContent().then((i) => {
+        console.log(i);
+        this.list = JSON.parse(i);
+      });
+    },
     save() {
       let self = this;
       console.log(this.list);
@@ -123,7 +139,7 @@ export default {
   },
 };
 </script>
-<style  >
+<style>
 .row {
   display: flex;
 
@@ -137,12 +153,14 @@ export default {
   flex-grow: 1;
 }
 .save {
-  
-    position: absolute;
-    top: 0;
-    background: #cf4a00;
-    left: 0;
-    color: white;
-    padding: 0.4em;
+  position: absolute;
+  top: 0;
+  background: #cf4a00;
+  left: 0;
+  color: white;
+  padding: 0.4em;
+}
+.input {
+  left: 3em;
 }
 </style>
