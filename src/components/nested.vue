@@ -61,7 +61,8 @@ export default {
     selOne(val) {
       util.eventbus.$emit("selOne", val);
     },
-    delItem(){
+    delItem() {
+      this.dialogVisible = false;
       util.eventbus.$emit("delItem", { id: this.item.id });
     },
     cmtCss() {

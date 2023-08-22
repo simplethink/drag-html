@@ -68,7 +68,7 @@ export default class util {
 
   static formData = {
     width: { "100%": "", "40px": "" },
-    margin:{auto:'',unset:''},
+    margin: { auto: "", unset: "" },
     display: {
       block: [],
       flex: [
@@ -129,14 +129,11 @@ export default class util {
     }
   };
 
-  static findAndCopyNode = function (data, id) {
+  static findAndDoThings = function (data, id, cb) {
     // 递归遍历嵌套数据
     function traverse(node, parent, key) {
       if (node.id === id) {
-        // 复制节点
-        const newNode = deepCopyWithIdModification(node);
-        // 添加到节点所在数组的下一个索引位置
-        parent.splice(key + 1, 0, newNode);
+        cb(node, parent, key);
         return true;
       }
       if (node.tasks) {
@@ -151,6 +148,14 @@ export default class util {
     function copyObj(o) {
       return JSON.parse(JSON.stringify(o));
     }
+
+    data = copyObj(data);
+    // 调用遍历函数
+    traverse(data, null, null);
+
+    return data;
+  };
+  static findAndCopyNode = function (data, id) {
     function deepCopyWithIdModification(obj) {
       if (typeof obj !== "object" || obj === null) {
         return obj;
@@ -173,39 +178,24 @@ export default class util {
 
       return copiedObject;
     }
+    data = util.findAndDoThings(data, id, (node, parent, key) => {
+      const newNode = deepCopyWithIdModification(node);
+      // 添加到节点所在数组的下一个索引位置
+      parent.splice(key + 1, 0, newNode);
+    });
 
-    data = copyObj(data);
-    // 调用遍历函数
-    traverse(data, null, null);
-
-    // 返回修改后的数据
     return data;
   };
   static findAndCssIt = function (data, id, css) {
-    // 递归遍历嵌套数据
-    function traverse(node) {
-      if (node.id === id) {
-        node.css = css;
-        return true;
-      }
-      if (node.tasks) {
-        for (let i = 0; i < node.tasks.length; i++) {
-          if (traverse(node.tasks[i], node.tasks, i)) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-    function copyObj(o) {
-      return JSON.parse(JSON.stringify(o));
-    }
-
-    data = copyObj(data);
-    // 调用遍历函数
-    traverse(data, null, null);
-
-    // 返回修改后的数据
+    data = util.findAndDoThings(data, id, (node) => {
+      node.css = css;
+    });
+    return data;
+  };
+  static findAndDelIt = function (data, id) {
+    data = util.findAndDoThings(data, id, (node, parent, key) => {
+      parent.splice(key, 1);
+    });
     return data;
   };
 }

@@ -32,7 +32,8 @@ export default {
       this.selIndex = id;
     });
     util.eventbus.$on("delItem", (o) => {
-      let i = util.findAndCopyNode({ id: -1, tasks: [...this.list] }, o);
+      let i = util.findAndDelIt({ id: -1, tasks: [...this.list] }, o.id);
+      console.log(i);
       this.list = i.tasks;
     });
     
