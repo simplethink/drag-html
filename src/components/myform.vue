@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" label-width="80px">
+    <el-form ref="form" :model="form" label-width="80px" size="mini">
       {{ selTask.name }}
       <el-form-item v-for="(i, index) in arr" :key="index" :label="i.key">
         <el-radio-group v-model="form[i.key]">
@@ -14,8 +14,6 @@
 
 <script>
 import util from "../util";
-let formData = util.formData;
-console.log(formData);
 export default {
   data() {
     return {
@@ -27,7 +25,7 @@ export default {
   computed: {
     arr() {
       let marr = [];
-      util.traverseObject(formData, marr);
+      util.traverseObject.call(this, null, marr, this.form.display);
       console.log(marr, "========");
       return marr;
     },

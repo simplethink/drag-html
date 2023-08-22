@@ -68,48 +68,116 @@ export default class util {
 
   static formData = {
     display: {
-      default: [],
-      flex: {
-        "flex-direction": ["row", "column"],
-        "flex-wrap": ["nowrap", "wrap"],
-        "align-content": [
-          "normal",
-          "center",
-          "flex-start",
-          "flex-end",
-          "space-around",
-          "space-between",
-        ],
-        "justify-content": [
-          "normal",
-          "center",
-          "flex-start",
-          "flex-end",
-          "space-around",
-          "space-between",
-          "space-evenly",
-        ],
-        "align-items": ["normal", "center", "flex-start", "flex-end"],
-      },
+      block: [],
+      flex: [
+        { "flex-direction": { row: "", column: "" } },
+        { "flex-wrap": { nowrap: "", warp: "" } },
+        {
+          "align-content": {
+            normal: "",
+            center: "",
+            "flex-start": "",
+            "flex-end": "",
+            "space-around": "",
+            "space-between": "",
+          },
+        },
+        {
+          "justify-content": {
+            normal: "",
+            center: "",
+            "flex-start": "",
+            "flex-end": "",
+            "space-around": "",
+            "space-between": "",
+            "space-evenly": "",
+          },
+        },
+        {
+          "align-items": {
+            normal: "",
+            center: "",
+            "flex-start": "",
+            "flex-end": "",
+          },
+        },
+      ],
     },
   };
 
-  static traverseObject = (obj,arr)=> {
+  static traverseObject = function (obj, arr, targetKey) {
+    if (!obj) obj = util.formData;
     for (const key in obj) {
       // eslint-disable-next-line no-prototype-builtins
       if (obj.hasOwnProperty(key)) {
         const value = obj[key];
-
         if (Array.isArray(value)) {
+          if (targetKey != key) continue;
           console.log(value); // 打印数组
-          arr.splice(-1,0,{key,value})
+          value.forEach((element) => {
+            util.traverseObject.call(this, element, arr);
+          });
         } else if (typeof value === "object" && value !== null) {
-          arr.splice(-1,0,{key,value:Object.keys(value)})
-          this.traverseObject(value,arr); // 递归遍历对象
+          arr.push({ key, value: Object.keys(value) });
+          util.traverseObject.call(this, value, arr, this.form[key]); // 递归遍历对象
         } else if (value === "") {
           console.log("Empty string"); // 打印空字符串
         }
       }
     }
+  };
+
+  static findAndCopyNode = function (data, id) {
+    // 递归遍历嵌套数据
+    function traverse(node, parent, key) {
+      if (node.id === id) {
+        // 复制节点
+        const newNode = deepCopyWithIdModification(node);
+        // 添加到节点所在数组的下一个索引位置
+        parent.splice(key + 1, 0, newNode);
+        return true;
+      }
+      if (node.tasks) {
+        for (let i = 0; i < node.tasks.length; i++) {
+          if (traverse(node.tasks[i], node.tasks, i)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    function copyObj(o) {
+      return JSON.parse(JSON.stringify(o));
+    }
+    function deepCopyWithIdModification(obj) {
+      if (typeof obj !== 'object' || obj === null) {
+        return obj;
+      }
+    
+      let copiedObject = Array.isArray(obj) ? [] : {};
+    
+      for (let key in obj) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (obj.hasOwnProperty(key)) {
+          copiedObject[key] = deepCopyWithIdModification(obj[key]);
+        }
+      }
+    
+      // 修改id
+      // eslint-disable-next-line no-prototype-builtins
+      if (copiedObject.hasOwnProperty('id')) {
+        copiedObject.id = Date.now()
+      }
+    
+      return copiedObject;
+    }
+    
+    
+    data = copyObj(data);
+    // 调用遍历函数
+    traverse(data, null, null);
+
+    // 返回修改后的数据
+    return data;
   };
 }

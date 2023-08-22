@@ -8,14 +8,14 @@
   >
     <div
       v-for="el in tasks"
-      :key="el.name"
+      :key="el.id"
       :class="el.name"
       :style="el.css"
       @click.stop="selOne(el.id)"
       @dblclick.stop="handleDBC(el)"
       @contextmenu.prevent.stop="handleContextMenu($event, el)"
     >
-      <p>{{ el.name }}</p>
+      <!-- <p>{{ el.name }}</p> -->
       <nested-draggable :tasks="el.tasks" />
     </div>
   </draggable>
@@ -58,13 +58,7 @@ export default {
     handleContextMenu(...event) {
       // event.preventDefault(); // 阻止默认的右键菜单弹出
       console.log(event, "Right-click event triggered");
-      this.$alert(event[1].name, "标题", {
-        confirmButtonText: "确定",
-        callback: (action) => {
-          // 点击确定按钮后的回调函数
-          console.log(action);
-        },
-      });
+      util.eventbus.$emit("复制", event[1].id);
     },
   },
   name: "nested-draggable",
@@ -76,6 +70,8 @@ export default {
   outline: 1px dashed;
 }
 .task {
+  margin-top:1em;  border: solid 1px transparent !important;
+
 }
 
 .chosen {

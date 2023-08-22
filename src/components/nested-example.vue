@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-8">
       <h3>Nested draggable</h3>
-      <nested-draggable :tasks="list" style="width: 375px; margin: auto" />
+      <nested-draggable :tasks="list" style="width: 375px; margin: auto;border:3px solid black" />
     </div>
     <div class="col-9">
       <myform @changeForm="changeForm" :selTask="selTask"></myform>
@@ -25,6 +25,11 @@ export default {
   created() {
     util.eventbus.$on("selOne", (id) => {
       this.selIndex = id;
+    });
+    util.eventbus.$on("复制", (o) => {
+      let i = util.findAndCopyNode({ id: -1, tasks: [...this.list] }, o);
+      this.list = i.tasks;
+      console.log(i);
     });
     util.eventbus.$on("commit", (o) => {
       // o.flatMap(i=>{
