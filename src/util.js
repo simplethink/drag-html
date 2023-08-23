@@ -68,7 +68,7 @@ export default class util {
 
   static formData = {
     width: { "100%": "", "40px": "" },
-    height: { "100%": "", "auto": "" },
+    height: { "100%": "", auto: "" },
     margin: { auto: "", unset: "" },
     position: {
       absolute: [
@@ -195,9 +195,10 @@ export default class util {
 
     return data;
   };
-  static findAndCssIt = function (data, id, css) {
+  static findAndCssIt = function (data, id, o) {
     data = util.findAndDoThings(data, id, (node) => {
-      node.css = css;
+      node.name = o.name;
+      node.css = o.css;
     });
     return data;
   };
@@ -211,8 +212,8 @@ export default class util {
   static getCache(sessionKey) {
     sessionKey = "dragh5";
     if (localStorage.getItem(sessionKey)) {
-      let data =  JSON.parse(localStorage.getItem(sessionKey));
-      return data[Object.keys(data).slice(-1)]
+      let data = JSON.parse(localStorage.getItem(sessionKey));
+      return data[Object.keys(data).slice(-1)];
     } else {
       return false;
     }
@@ -222,7 +223,7 @@ export default class util {
       obj = sessionKey;
       sessionKey = "dragh5";
     }
-    obj = {['ver'+Date.now()]:obj}
+    obj = { ["ver" + Date.now()]: obj };
     if (localStorage.getItem(sessionKey)) {
       let mainMsgInfo = JSON.parse(localStorage.getItem(sessionKey));
       mainMsgInfo = {

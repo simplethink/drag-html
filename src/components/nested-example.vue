@@ -50,7 +50,7 @@ export default {
       this.list = util.findAndCssIt(
         { id: -1, tasks: [...this.list] },
         o.id,
-        o.css
+        o
       ).tasks;
     });
   },

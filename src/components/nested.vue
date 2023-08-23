@@ -6,7 +6,7 @@
     :list="tasks"
     :group="{ name: 'g1' }"
   >
-  {{ $attrs.text}}
+    {{ $attrs.text }}
     <nested-draggable
       :tasks="el.tasks"
       v-for="el in tasks"
@@ -19,7 +19,13 @@
       @contextmenu.native.prevent.stop="handleContextMenu($event, el)"
     >
     </nested-draggable>
-    <el-dialog title="提示" append-to-body :visible.sync="dialogVisible" width="30%">
+    <!-- <el-dialog
+      title="提示"
+      append-to-body
+      :visible.sync="dialogVisible"
+      width="30%"
+    >
+      <el-input v-model="txtVal" placeholder="输入文本"></el-input>
       <el-input
         type="textarea"
         :autosize="{ minRows: 2, maxRows: 14 }"
@@ -30,7 +36,7 @@
         <el-button @click="delItem">删 除</el-button>
         <el-button type="primary" @click="cmtCss">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </draggable>
 </template>
 <script>
@@ -52,6 +58,7 @@ export default {
   data() {
     return {
       cssVal: "",
+      txtVal:"",
       item: {},
       dialogVisible: false,
     };
@@ -73,11 +80,13 @@ export default {
         // ...util.cssToJs(this.item.css),
         ...util.cssToJs(this.cssVal),
       });
-      util.eventbus.$emit("commit", { id: this.item.id, css: target });
+      util.eventbus.$emit("commit", { id: this.item.id, css: target,name:this.txtVal });
     },
     handleDBC(el) {
       this.dialogVisible = true;
       this.cssVal = el.css;
+      this.txtVal = el.name;
+      
       this.item = el;
       // this.$prompt("请输入css", el.name, { inputValue: el.css }).then(
       //   ({ value }) => {
@@ -100,14 +109,14 @@ export default {
 };
 </script>
 <style>
-#col-8>.dragArea{
+#col-8 > .dragArea {
   height: fit-content;
 }
 .dragArea {
   height: 50px;
   outline: 1px dashed;
 }
-.dragArea::before{
+.dragArea::before {
   /* content:'正' */
 }
 .task {
