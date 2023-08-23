@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form ref="form" :model="form" label-width="80px" size="mini">
-      {{ "id:"+ selTask.id }}
+      {{ "id:" + selTask.id }}
       <el-form-item v-for="(i, index) in arr" :key="index" :label="i.key">
         <el-radio-group v-model="form[i.key]">
           <el-radio v-for="j in i.value" :key="j" :label="j"></el-radio>
@@ -17,20 +17,25 @@ import util from "../util";
 export default {
   data() {
     return {
-      form: {
-        display: "",
-      },
+      form: {},
     };
+  },
+  methods: {
+    init() {
+      this.form = util.cssToJs(this.selTask.css);
+    },
   },
   computed: {
     arr() {
       let marr = [];
       util.traverseObject.call(this, null, marr, this.form.display);
-      console.log(marr, "========");
       return marr;
     },
   },
   watch: {
+    selTask() {
+      this.init();
+    },
     form: {
       deep: true,
       handler: function (val) {

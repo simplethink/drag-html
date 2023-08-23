@@ -68,7 +68,17 @@ export default class util {
 
   static formData = {
     width: { "100%": "", "40px": "" },
+    height: { "100%": "", "auto": "" },
     margin: { auto: "", unset: "" },
+    position: {
+      absolute: [
+        { left: { 0: "" } },
+        { right: { 0: "" } },
+        { top: { 0: "" } },
+        { bottom: { 0: "" } },
+      ],
+      relative: "",
+    },
     display: {
       block: [],
       flex: [
@@ -92,7 +102,7 @@ export default class util {
             "flex-end": "",
           },
         },
-        { "flex-wrap": { nowrap: "", warp: "" } },
+        { "flex-wrap": { nowrap: "", wrap: "" } },
         {
           "align-content": {
             normal: "",
@@ -115,7 +125,6 @@ export default class util {
         const value = obj[key];
         if (Array.isArray(value)) {
           if (targetKey != key) continue;
-          console.log(value); // 打印数组
           value.forEach((element) => {
             util.traverseObject.call(this, element, arr);
           });
@@ -123,7 +132,7 @@ export default class util {
           arr.push({ key, value: Object.keys(value) });
           util.traverseObject.call(this, value, arr, this.form[key]); // 递归遍历对象
         } else if (value === "") {
-          console.log("Empty string"); // 打印空字符串
+          // console.log("Empty string"); // 打印空字符串
         }
       }
     }
@@ -198,4 +207,31 @@ export default class util {
     });
     return data;
   };
+
+  static getCache(sessionKey) {
+    sessionKey = "dragh5";
+    if (localStorage.getItem(sessionKey)) {
+      let data =  JSON.parse(localStorage.getItem(sessionKey));
+      return data[Object.keys(data).slice(-1)]
+    } else {
+      return false;
+    }
+  }
+  static setCache(sessionKey, obj) {
+    if (!obj) {
+      obj = sessionKey;
+      sessionKey = "dragh5";
+    }
+    obj = {['ver'+Date.now()]:obj}
+    if (localStorage.getItem(sessionKey)) {
+      let mainMsgInfo = JSON.parse(localStorage.getItem(sessionKey));
+      mainMsgInfo = {
+        ...mainMsgInfo,
+        ...obj,
+      };
+      localStorage.setItem(sessionKey, JSON.stringify(mainMsgInfo));
+    } else {
+      localStorage.setItem(sessionKey, JSON.stringify(obj));
+    }
+  }
 }

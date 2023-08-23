@@ -2,7 +2,7 @@
   <div class="row">
     <div class="save" @click="save">保存</div>
     <div class="save input" @click="input">输入</div>
-    <div class="col-8">
+    <div class="col-8" id="col-8">
       <h3>Nested draggable</h3>
       <nested-draggable
         :tasks="list"
@@ -36,7 +36,7 @@ export default {
       console.log(i);
       this.list = i.tasks;
     });
-    
+
     util.eventbus.$on("复制", (o) => {
       let i = util.findAndCopyNode({ id: -1, tasks: [...this.list] }, o);
       this.list = i.tasks;
@@ -61,18 +61,18 @@ export default {
   },
   methods: {
     input() {
-      function getClipboardContent() {
-        return navigator.clipboard
-          .readText()
-      }
-      getClipboardContent().then((i) => {
-        console.log(i);
-        this.list = JSON.parse(i);
-      });
+      // function getClipboardContent() {
+      //   return navigator.clipboard.readText();
+      // }
+      // getClipboardContent().then((i) => {
+      //   console.log(i);
+      //   this.list = JSON.parse(i);
+      // });
+      this.list = util.getCache()
     },
     save() {
       let self = this;
-      console.log(this.list);
+      util.setCache(this.list);
       (function (s) {
         document.oncopy = function (e) {
           e.clipboardData.setData("text", s);

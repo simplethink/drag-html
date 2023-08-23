@@ -6,18 +6,20 @@
     :list="tasks"
     :group="{ name: 'g1' }"
   >
+  {{ $attrs.text}}
     <nested-draggable
       :tasks="el.tasks"
       v-for="el in tasks"
       :key="el.id"
       :class="el.name"
+      :text="el.name"
       :style="el.css"
       @click.native.stop="selOne(el.id)"
       @dblclick.native.stop="handleDBC(el)"
       @contextmenu.native.prevent.stop="handleContextMenu($event, el)"
     >
     </nested-draggable>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+    <el-dialog title="提示" append-to-body :visible.sync="dialogVisible" width="30%">
       <el-input
         type="textarea"
         :autosize="{ minRows: 2, maxRows: 14 }"
@@ -98,9 +100,15 @@ export default {
 };
 </script>
 <style>
+#col-8>.dragArea{
+  height: fit-content;
+}
 .dragArea {
-  min-height: 50px;
+  height: 50px;
   outline: 1px dashed;
+}
+.dragArea::before{
+  /* content:'正' */
 }
 .task {
   margin-top: 1em;
