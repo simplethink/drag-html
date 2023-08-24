@@ -19,7 +19,7 @@
       @contextmenu.native.prevent.stop="handleContextMenu($event, el)"
     >
     </nested-draggable>
-    <!-- <el-dialog
+    <el-dialog
       title="提示"
       append-to-body
       :visible.sync="dialogVisible"
@@ -36,7 +36,7 @@
         <el-button @click="delItem">删 除</el-button>
         <el-button type="primary" @click="cmtCss">确 定</el-button>
       </span>
-    </el-dialog> -->
+    </el-dialog>
   </draggable>
 </template>
 <script>

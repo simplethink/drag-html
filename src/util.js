@@ -164,6 +164,54 @@ export default class util {
 
     return data;
   };
+  static onlyForeach = function (data, cb) {
+    // 递归遍历嵌套数据
+    function traverse(node, parent, key) {
+      cb(node, parent, key);
+      if (node.tasks) {
+        for (let i = 0; i < node.tasks.length; i++) {
+          if (traverse(node.tasks[i], node.tasks, i)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    function copyObj(o) {
+      return JSON.parse(JSON.stringify(o));
+    }
+
+    data = copyObj(data);
+    // 调用遍历函数
+    traverse(data, null, null);
+
+    return data;
+  };
+
+  static objectReduce = function (data) {
+    // 递归遍历嵌套数据
+    function traverse(node) {
+      let target = "";
+      let children = "";
+      if (node.tasks) {
+        for (let i = 0; i < node.tasks.length; i++) {
+          children += traverse(node.tasks[i]);
+        }
+        target = `<div class='c${node.id}'> ${children}</div>`;
+      } else {
+        console.log("没有tasks，list格式有问题");
+      }
+      return target;
+    }
+    function copyObj(o) {
+      return JSON.parse(JSON.stringify(o));
+    }
+
+    data = copyObj(data);
+    // 调用遍历函数
+    return traverse(data, null, null);
+  };
+
   static findAndCopyNode = function (data, id) {
     function deepCopyWithIdModification(obj) {
       if (typeof obj !== "object" || obj === null) {

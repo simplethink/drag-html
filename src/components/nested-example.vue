@@ -2,6 +2,7 @@
   <div class="row">
     <div class="save" @click="save">保存</div>
     <div class="save input" @click="input">输入</div>
+    <div class="save output" @click="output">导出</div>
     <div class="col-8" id="col-8">
       <h3>Nested draggable</h3>
       <nested-draggable
@@ -68,11 +69,26 @@ export default {
       //   console.log(i);
       //   this.list = JSON.parse(i);
       // });
-      this.list = util.getCache()
+      this.list = util.getCache();
+    },
+    output() {
+      let cssArr = {};
+      util.onlyForeach({ id: -1, tasks: [...this.list] }, (node) => {
+        cssArr[node.id] = node.css;
+      });
+      let cssStr = Object.keys(cssArr).reduce((sum, currentKey) => {
+        if (cssArr[currentKey])
+          return sum + `.c${currentKey}{${cssArr[currentKey]}}`;
+        else return sum;
+      }, "");
+      cssStr = `<style>${cssStr}</style>`;
+      console.log(cssStr, util.objectReduce({ id: -1, tasks: [...this.list] }));
     },
     save() {
       let self = this;
+      // 保存到localstorage
       util.setCache(this.list);
+      //复制到剪切板
       (function (s) {
         document.oncopy = function (e) {
           e.clipboardData.setData("text", s);
@@ -163,5 +179,8 @@ export default {
 }
 .input {
   left: 3em;
+}
+.output {
+  left: 6em;
 }
 </style>
