@@ -10,7 +10,8 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "element-ui": "^2.15.13",
-    "vue": "^2.6.11",
+    "pinia": "^2.0.0-rc.10",
+    "vue": "^2.7.14",
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {

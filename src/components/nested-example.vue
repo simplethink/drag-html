@@ -1,18 +1,38 @@
 <template>
   <div class="row">
-    <div class="save" @click="save">保存</div>
-    <div class="save input" @click="input">输入</div>
-    <div class="save output" @click="output">导出</div>
+    <el-button-group class="save">
+      <el-button @click="save" type="primary">保存</el-button>
+      <el-dropdown split-button type="primary" @click="input">
+        输入
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item
+            v-for="(i, key) in m"
+            :key="key"
+            @click.native="list = i"
+            >{{ key }}</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-button class="save output" @click="output" type="primary"
+        >导出</el-button
+      >
+    </el-button-group>
     <div class="col-8" id="col-8">
       <h3>Nested draggable</h3>
       <nested-draggable
         :tasks="list"
-        style="width: 375px; margin: auto; border: 3px solid black"
+        style="
+          width: 375px;
+          position: relative;
+          margin: auto;
+          border: 3px solid black;
+        "
       />
     </div>
     <div class="col-9">
       <myform @changeForm="changeForm" :selTask="selTask"></myform>
     </div>
+    {{ m + "1111111" }}
   </div>
 </template>
 
@@ -20,6 +40,8 @@
 import util from "../util";
 import nestedDraggable from "./nested.vue";
 import myform from "./myform.vue";
+import { mapActions, mapState } from "pinia";
+import { useCounterStore } from "../store/index";
 export default {
   name: "nested-example",
   display: "Nested",
@@ -56,11 +78,16 @@ export default {
     });
   },
   computed: {
+    ...mapState(useCounterStore, { m: "count" }),
     selTask() {
       return util.findNodeById(this.list, this.selIndex);
     },
   },
   methods: {
+    ...mapActions(useCounterStore, { moar: "increment", setIt: "setCount" }),
+    handleCommand(i, key) {
+      this.$message("click on item " + i + key);
+    },
     input() {
       // function getClipboardContent() {
       //   return navigator.clipboard.readText();
@@ -69,7 +96,7 @@ export default {
       //   console.log(i);
       //   this.list = JSON.parse(i);
       // });
-      this.list = util.getCache();
+      this.list = this.m[Object.keys(this.m).slice(-1)];
     },
     output() {
       let cssArr = {};
@@ -117,7 +144,7 @@ export default {
   data() {
     return {
       selIndex: 0,
-
+      history: [],
       list: [
         {
           name: "task 1",
@@ -172,15 +199,8 @@ export default {
 .save {
   position: absolute;
   top: 0;
-  background: #cf4a00;
   left: 0;
   color: white;
   padding: 0.4em;
-}
-.input {
-  left: 3em;
-}
-.output {
-  left: 6em;
 }
 </style>

@@ -261,7 +261,7 @@ export default class util {
     sessionKey = "dragh5";
     if (localStorage.getItem(sessionKey)) {
       let data = JSON.parse(localStorage.getItem(sessionKey));
-      return data[Object.keys(data).slice(-1)];
+      return data;
     } else {
       return false;
     }
