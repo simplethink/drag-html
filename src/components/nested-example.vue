@@ -9,7 +9,7 @@
             v-for="(i, key) in m"
             :key="key"
             @click.native="list = i"
-            >{{ key }}</el-dropdown-item
+            >{{ toDate(key) }}</el-dropdown-item
           >
         </el-dropdown-menu>
       </el-dropdown>
@@ -31,8 +31,10 @@
     </div>
     <div class="col-9">
       <myform @changeForm="changeForm" :selTask="selTask"></myform>
+      <el-menu :default-active="'0'" @select="menuSelect" @close="menuSelect">
+        <mymenu :item="i" v-for="(i, key) in list" :key="key"></mymenu>
+      </el-menu>
     </div>
-    {{ m + "1111111" }}
   </div>
 </template>
 
@@ -42,6 +44,7 @@ import nestedDraggable from "./nested.vue";
 import myform from "./myform.vue";
 import { mapActions, mapState } from "pinia";
 import { useCounterStore } from "../store/index";
+import Mymenu from "./mymenu.vue";
 export default {
   name: "nested-example",
   display: "Nested",
@@ -49,6 +52,7 @@ export default {
   components: {
     myform,
     nestedDraggable,
+    Mymenu,
   },
   created() {
     util.eventbus.$on("selOne", (id) => {
@@ -84,6 +88,13 @@ export default {
     },
   },
   methods: {
+    menuSelect(id) {
+      console.log(id);
+      this.selIndex = id;
+    },
+    toDate(val) {
+      return new Date(val.substr(3) - 0).toString().substr(4, 14);
+    },
     ...mapActions(useCounterStore, { moar: "increment", setIt: "setCount" }),
     handleCommand(i, key) {
       this.$message("click on item " + i + key);

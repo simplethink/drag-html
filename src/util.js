@@ -8,7 +8,7 @@ export default class util {
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
 
-      if (node.id === id) {
+      if (node.id == id) {
         return node;
       }
 
@@ -230,7 +230,8 @@ export default class util {
       // 修改id
       // eslint-disable-next-line no-prototype-builtins
       if (copiedObject.hasOwnProperty("id")) {
-        copiedObject.id = Date.now();
+        copiedObject.id =
+          Date.now() + Math.random().toString(10).substr(-2);
       }
 
       return copiedObject;

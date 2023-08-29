@@ -58,7 +58,7 @@ export default {
   data() {
     return {
       cssVal: "",
-      txtVal:"",
+      txtVal: "",
       item: {},
       dialogVisible: false,
     };
@@ -80,13 +80,16 @@ export default {
         // ...util.cssToJs(this.item.css),
         ...util.cssToJs(this.cssVal),
       });
-      util.eventbus.$emit("commit", { id: this.item.id, css: target,name:this.txtVal });
+      util.eventbus.$emit("commit", {
+        id: this.item.id,
+        css: target,
+        name: this.txtVal,
+      });
     },
     handleDBC(el) {
       this.dialogVisible = true;
       this.cssVal = el.css;
       this.txtVal = el.name;
-      
       this.item = el;
       // this.$prompt("请输入css", el.name, { inputValue: el.css }).then(
       //   ({ value }) => {
@@ -115,6 +118,7 @@ export default {
 .dragArea {
   height: 50px;
   outline: 1px dashed;
+  box-sizing: border-box;
 }
 .dragArea::before {
   /* content:'正' */
