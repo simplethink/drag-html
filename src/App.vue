@@ -45,4 +45,20 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
+.border-animation { 
+   animation: blink 1s 2;
+}
+
+@keyframes blink {
+  0% {
+    border:2px solid #000;
+  }
+  50% {
+    border:2px solid #ff0000;
+  }
+  100% {
+    border:2px solid #000;
+  }
+}
 </style>

@@ -59,7 +59,7 @@ export default {
   created() {
     this.list = this.m[Object.keys(this.m).slice(-1)];
 
-util.eventbus.$on("appendChild", (o) => {
+    util.eventbus.$on("appendChild", (o) => {
       let i = util.findAndAppend({ id: -1, tasks: [...this.list] }, o.id);
       console.log(i);
       this.list = i.tasks;
@@ -98,8 +98,9 @@ util.eventbus.$on("appendChild", (o) => {
   },
   methods: {
     menuSelect(id) {
-      console.log(id);
-      document.querySelector(".c" + id).style = { border: "1px solid red" };
+       let a = document.querySelector(".c" + id).classList;
+      a.remove("border-animation");
+      a.add("border-animation");
       this.selIndex = id;
     },
     toDate(val) {
@@ -118,10 +119,10 @@ util.eventbus.$on("appendChild", (o) => {
       //   this.list = JSON.parse(i);
       // });
       this.$prompt("nothing", {
-        inputType:'textarea',
-        closeOnPressEscape:true,
+        inputType: "textarea",
+        closeOnPressEscape: true,
         inputValue: JSON.stringify(this.m[Object.keys(this.m).slice(-1)]),
-      }).then(({value:val}) => {
+      }).then(({ value: val }) => {
         this.list = JSON.parse(val);
       });
     },
