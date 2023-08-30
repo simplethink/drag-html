@@ -20,7 +20,7 @@ export default class util {
       }
     }
 
-    return null;
+    return false;
   }
   static objectToStyleString = (obj) => {
     let styleString = "";
@@ -197,7 +197,7 @@ export default class util {
         for (let i = 0; i < node.tasks.length; i++) {
           children += traverse(node.tasks[i]);
         }
-        target = `<div class='c${node.id}'> ${children}</div>`;
+        target = `<div class='c${node.id}'> ${node.name + children}</div>`;
       } else {
         console.log("没有tasks，list格式有问题");
       }
@@ -230,8 +230,7 @@ export default class util {
       // 修改id
       // eslint-disable-next-line no-prototype-builtins
       if (copiedObject.hasOwnProperty("id")) {
-        copiedObject.id =
-          Date.now() + Math.random().toString(10).substr(-2);
+        copiedObject.id = Date.now() + Math.random().toString(10).substr(-2);
       }
 
       return copiedObject;
@@ -248,6 +247,18 @@ export default class util {
     data = util.findAndDoThings(data, id, (node) => {
       node.name = o.name;
       node.css = o.css;
+    });
+    return data;
+  };
+
+  static findAndAppend = function (data, id) {
+    data = util.findAndDoThings(data, id, (node) => {
+      node.tasks.push({
+        name: "",
+        id: Date.now(),
+        css: "",
+        tasks: [],
+      });
     });
     return data;
   };

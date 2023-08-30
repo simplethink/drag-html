@@ -22,6 +22,7 @@ export default {
   },
   methods: {
     init() {
+      if(!this.selTask) return
       this.form = util.cssToJs(this.selTask.css);
     },
   },
@@ -46,7 +47,7 @@ export default {
   props: {
     selTask: {
       required: true,
-      type: Object,
+      type: [Object,Boolean],
     },
   },
 };

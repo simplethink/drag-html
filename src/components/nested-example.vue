@@ -2,6 +2,7 @@
   <div class="row">
     <el-button-group class="save">
       <el-button @click="save" type="primary">保存</el-button>
+      <el-button @click="list = []" type="primary">清空</el-button>
       <el-dropdown split-button type="primary" @click="input">
         输入
         <el-dropdown-menu slot="dropdown">
@@ -44,6 +45,7 @@ import nestedDraggable from "./nested.vue";
 import myform from "./myform.vue";
 import { mapActions, mapState } from "pinia";
 import { useCounterStore } from "../store/index";
+import { list } from "../assets/js/defaultList";
 import Mymenu from "./mymenu.vue";
 export default {
   name: "nested-example",
@@ -55,6 +57,13 @@ export default {
     Mymenu,
   },
   created() {
+    this.list = this.m[Object.keys(this.m).slice(-1)];
+
+util.eventbus.$on("appendChild", (o) => {
+      let i = util.findAndAppend({ id: -1, tasks: [...this.list] }, o.id);
+      console.log(i);
+      this.list = i.tasks;
+    });
     util.eventbus.$on("selOne", (id) => {
       this.selIndex = id;
     });
@@ -90,6 +99,7 @@ export default {
   methods: {
     menuSelect(id) {
       console.log(id);
+      document.querySelector(".c" + id).style = { border: "1px solid red" };
       this.selIndex = id;
     },
     toDate(val) {
@@ -107,7 +117,13 @@ export default {
       //   console.log(i);
       //   this.list = JSON.parse(i);
       // });
-      this.list = this.m[Object.keys(this.m).slice(-1)];
+      this.$prompt("nothing", {
+        inputType:'textarea',
+        closeOnPressEscape:true,
+        inputValue: JSON.stringify(this.m[Object.keys(this.m).slice(-1)]),
+      }).then(({value:val}) => {
+        this.list = JSON.parse(val);
+      });
     },
     output() {
       let cssArr = {};
@@ -144,6 +160,7 @@ export default {
     },
     changeForm(val) {
       let sel = this.selTask;
+      if (!sel) return;
       sel.css = util.objectToStyleString({
         ...util.cssToJs(sel.css),
         ...val,
@@ -156,40 +173,7 @@ export default {
     return {
       selIndex: 0,
       history: [],
-      list: [
-        {
-          name: "task 1",
-          id: 0,
-          css: "",
-          tasks: [
-            {
-              name: "task 2",
-              id: 1,
-              css: "",
-              tasks: [],
-            },
-          ],
-        },
-        {
-          name: "task 3",
-          id: 2,
-          css: "",
-          tasks: [
-            {
-              name: "task 4",
-              id: 3,
-              css: "",
-              tasks: [],
-            },
-          ],
-        },
-        {
-          name: "task 5",
-          id: 4,
-          css: "",
-          tasks: [],
-        },
-      ],
+      list,
     };
   },
 };

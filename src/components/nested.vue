@@ -11,7 +11,7 @@
       :tasks="el.tasks"
       v-for="el in tasks"
       :key="el.id"
-      :class="el.name"
+      :class="'c'+el.id"
       :text="el.name"
       :style="el.css"
       @click.native.stop="selOne(el.id)"
@@ -25,6 +25,8 @@
       :visible.sync="dialogVisible"
       width="30%"
     >
+      <el-button type="danger" @click="delItem">删 除</el-button>
+      <el-button  @click="appendChild">生蛋</el-button>
       <el-input v-model="txtVal" placeholder="输入文本"></el-input>
       <el-input
         type="textarea"
@@ -33,7 +35,6 @@
         placeholder=""
       ></el-input>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="delItem">删 除</el-button>
         <el-button type="primary" @click="cmtCss">确 定</el-button>
       </span>
     </el-dialog>
@@ -68,11 +69,19 @@ export default {
   },
   methods: {
     selOne(val) {
+        this.dialogVisible = false;
       util.eventbus.$emit("selOne", val);
     },
+    appendChild(){
+        this.dialogVisible = false;
+      util.eventbus.$emit("appendChild", { id: this.item.id });
+
+    },
     delItem() {
-      this.dialogVisible = false;
-      util.eventbus.$emit("delItem", { id: this.item.id });
+      this.$alert("确认删除？").then(() => {
+        this.dialogVisible = false;
+        util.eventbus.$emit("delItem", { id: this.item.id });
+      });
     },
     cmtCss() {
       this.dialogVisible = false;
