@@ -1,17 +1,19 @@
 <template>
   <draggable
     class="dragArea"
-    tag="div"
+    :tag="($attrs.item && $attrs.item.tag) || 'div'"
     chosen-class="chosen"
     :list="tasks"
     :group="{ name: 'g1' }"
   >
     {{ $attrs.text }}
     <nested-draggable
+      :item="el"
       :tasks="el.tasks"
+      :src=" require('../assets/ab.png')"
       v-for="el in tasks"
       :key="el.id"
-      :class="'c'+el.id"
+      :class="'c' + el.id"
       :text="el.name"
       :style="el.css"
       @click.native.stop="selOne(el.id)"
@@ -26,7 +28,7 @@
       width="30%"
     >
       <el-button type="danger" @click="delItem">删 除</el-button>
-      <el-button  @click="appendChild">生蛋</el-button>
+      <el-button @click="appendChild">生蛋</el-button>
       <el-input v-model="txtVal" placeholder="输入文本"></el-input>
       <el-input
         type="textarea"
@@ -43,6 +45,8 @@
 <script>
 import util from "../util";
 import draggable from "vuedraggable";
+
+// import img from "../assets/aa.png";
 // 引入eleuif
 // 把右键菜单搞出来，要有复制，新增，填写css
 // 换掉ul=>div
@@ -69,13 +73,12 @@ export default {
   },
   methods: {
     selOne(val) {
-        this.dialogVisible = false;
+      this.dialogVisible = false;
       util.eventbus.$emit("selOne", val);
     },
-    appendChild(){
-        this.dialogVisible = false;
+    appendChild() {
+      this.dialogVisible = false;
       util.eventbus.$emit("appendChild", { id: this.item.id });
-
     },
     delItem() {
       this.$alert("确认删除？").then(() => {

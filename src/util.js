@@ -270,7 +270,7 @@ export default class util {
   };
 
   static getCache(sessionKey) {
-    sessionKey = "dragh5";
+    sessionKey = sessionKey || "dragh5";
     if (localStorage.getItem(sessionKey)) {
       let data = JSON.parse(localStorage.getItem(sessionKey));
       return data;
@@ -278,6 +278,21 @@ export default class util {
       return false;
     }
   }
+
+  static setCacheTemp(sessionKey, obj) {
+    if (!obj) {
+      obj = sessionKey;
+      sessionKey = "tempHD";
+    }
+    if (localStorage.getItem(sessionKey)) {
+      let mainMsgInfo = JSON.parse(localStorage.getItem(sessionKey));
+      mainMsgInfo.unshift(obj);
+      localStorage.setItem(sessionKey, JSON.stringify(mainMsgInfo));
+    } else {
+      localStorage.setItem(sessionKey, JSON.stringify([obj]));
+    }
+  }
+
   static setCache(sessionKey, obj) {
     if (!obj) {
       obj = sessionKey;

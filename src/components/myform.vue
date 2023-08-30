@@ -2,6 +2,12 @@
   <div>
     <el-form ref="form" :model="form" label-width="80px" size="mini">
       {{ "id:" + selTask.id }}
+      <el-form-item label="tag">
+        <el-radio-group v-model="tag">
+          <el-radio label="img"> </el-radio>
+          <el-radio label="div"> </el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item v-for="(i, index) in arr" :key="index" :label="i.key">
         <el-radio-group v-model="form[i.key]">
           <el-radio v-for="j in i.value" :key="j" :label="j"></el-radio>
@@ -14,16 +20,30 @@
 
 <script>
 import util from "../util";
+let unwatch = () => {};
 export default {
   data() {
     return {
+      tag: "div",
       form: {},
     };
   },
   methods: {
     init() {
-      if(!this.selTask) return
+      if (!this.selTask) return;
+      unwatch();
       this.form = util.cssToJs(this.selTask.css);
+
+      unwatch = this.$watch(
+        "form",
+        function (val) {
+          this.$emit("changeForm", { css: val });
+          console.log(1111111);
+        },
+        { deep: true }
+      );
+
+      this.tag = this.selTask.tag || "div";
     },
   },
   computed: {
@@ -37,17 +57,14 @@ export default {
     selTask() {
       this.init();
     },
-    form: {
-      deep: true,
-      handler: function (val) {
-        this.$emit("changeForm", val);
-      },
+    tag(val) {
+      this.$emit("changeForm", { tag: val });
     },
   },
   props: {
     selTask: {
       required: true,
-      type: [Object,Boolean],
+      type: [Object, Boolean],
     },
   },
 };

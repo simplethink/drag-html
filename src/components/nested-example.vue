@@ -1,8 +1,10 @@
 <template>
   <div class="row">
+    <!-- 按钮组 -->
     <el-button-group class="save">
       <el-button @click="save" type="primary">保存</el-button>
       <el-button @click="list = []" type="primary">清空</el-button>
+      <el-button @click="undo" type="primary">撤销</el-button>
       <el-dropdown split-button type="primary" @click="input">
         输入
         <el-dropdown-menu slot="dropdown">
@@ -18,6 +20,7 @@
         >导出</el-button
       >
     </el-button-group>
+    <!-- 预览preview -->
     <div class="col-8" id="col-8">
       <h3>Nested draggable</h3>
       <nested-draggable
@@ -30,11 +33,22 @@
         "
       />
     </div>
+    <!-- 右侧工具栏 -->
     <div class="col-9">
+      <!-- 导航菜单 -->
+      <div>
+        <el-button type="" @click="showMenu = !showMenu"> 展开/收起 </el-button>
+        <el-menu
+          v-if="showMenu"
+          :default-active="'0'"
+          @select="menuSelect"
+          @close="menuSelect"
+        >
+          <mymenu :item="i" v-for="(i, key) in list" :key="key"></mymenu>
+        </el-menu>
+      </div>
+      <!-- 样式表 -->
       <myform @changeForm="changeForm" :selTask="selTask"></myform>
-      <el-menu :default-active="'0'" @select="menuSelect" @close="menuSelect">
-        <mymenu :item="i" v-for="(i, key) in list" :key="key"></mymenu>
-      </el-menu>
     </div>
   </div>
 </template>
@@ -88,6 +102,9 @@ export default {
         o.id,
         o
       ).tasks;
+
+       //暂存
+        util.setCacheTemp(this.list);
     });
   },
   computed: {
@@ -96,11 +113,18 @@ export default {
       return util.findNodeById(this.list, this.selIndex);
     },
   },
+   
   methods: {
+    undo(){
+      let i =util.getCache('tempHD')
+      this.list = i.pop()
+    },
     menuSelect(id) {
-       let a = document.querySelector(".c" + id).classList;
-      a.remove("border-animation");
+      let a = document.querySelector(".c" + id).classList;
       a.add("border-animation");
+      setTimeout(() => {
+        a.remove("border-animation");
+      }, 2000);
       this.selIndex = id;
     },
     toDate(val) {
@@ -159,19 +183,26 @@ export default {
       })(JSON.stringify(self.list));
       document.execCommand("Copy");
     },
-    changeForm(val) {
+    changeForm({ css, tag }) {
       let sel = this.selTask;
       if (!sel) return;
-      sel.css = util.objectToStyleString({
-        ...util.cssToJs(sel.css),
-        ...val,
-      });
+      if (css) {
+        // 合并css
+        sel.css = util.objectToStyleString({
+          ...util.cssToJs(sel.css),
+          ...css,
+        });
+      }
+      if (tag) sel.tag = tag;
       this.list = [...this.list];
+       //暂存
+        util.setCacheTemp(this.list);
     },
   },
 
   data() {
     return {
+      showMenu: false,
       selIndex: 0,
       history: [],
       list,

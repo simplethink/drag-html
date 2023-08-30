@@ -25,6 +25,16 @@ export default {
       dragging: false,
     };
   },
+  mounted() {
+    // let self = this
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        // 在这里执行你想要触发的操作
+        console.log("ESC键被按下了！");
+        // self.$alert('ni')
+      }
+    });
+  },
   methods: {
     checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
@@ -46,19 +56,22 @@ export default {
   margin-top: 60px;
 }
 
-.border-animation { 
-   animation: blink 1s 2;
+.border-animation {
+  animation: blink 1s 2;
 }
 
 @keyframes blink {
   0% {
-    border:2px solid #000;
+    border: 2px solid #000;
   }
   50% {
-    border:2px solid #ff0000;
+    border: 2px solid #ff0000;
   }
   100% {
-    border:2px solid #000;
+    border: 2px solid #000;
   }
+}
+img {
+  object-fit: cover;
 }
 </style>
