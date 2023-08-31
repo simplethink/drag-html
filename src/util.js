@@ -1,5 +1,5 @@
 import Vue from "vue";
-
+import { formData } from "./assets/js/formData.js";
 export default class util {
   constructor() {}
   static eventbus = new Vue();
@@ -66,59 +66,8 @@ export default class util {
     return cssObj;
   };
 
-  static formData = {
-    width: { "100%": "", "40px": "" },
-    height: { "100%": "", auto: "" },
-    margin: { auto: "", unset: "" },
-    position: {
-      absolute: [
-        { left: { 0: "" } },
-        { right: { 0: "" } },
-        { top: { 0: "" } },
-        { bottom: { 0: "" } },
-      ],
-      relative: "",
-    },
-    display: {
-      block: [],
-      flex: [
-        { "flex-direction": { row: "", column: "" } },
-        {
-          "justify-content": {
-            normal: "",
-            center: "",
-            "flex-start": "",
-            "flex-end": "",
-            "space-around": "",
-            "space-between": "",
-            "space-evenly": "",
-          },
-        },
-        {
-          "align-items": {
-            normal: "",
-            center: "",
-            "flex-start": "",
-            "flex-end": "",
-          },
-        },
-        { "flex-wrap": { nowrap: "", wrap: "" } },
-        {
-          "align-content": {
-            normal: "",
-            center: "",
-            "flex-start": "",
-            "flex-end": "",
-            "space-around": "",
-            "space-between": "",
-          },
-        },
-      ],
-    },
-  };
-
   static traverseObject = function (obj, arr, targetKey) {
-    if (!obj) obj = util.formData;
+    if (!obj) obj = formData;
     for (const key in obj) {
       // eslint-disable-next-line no-prototype-builtins
       if (obj.hasOwnProperty(key)) {
@@ -197,7 +146,9 @@ export default class util {
         for (let i = 0; i < node.tasks.length; i++) {
           children += traverse(node.tasks[i]);
         }
-        target = `<div class='c${node.id}'> ${node.name + children}</div>`;
+        target = `<${node.tag || "div"} class='c${node.id}'> ${
+          node.name + children
+        }</${node.tag || "div"}>`;
       } else {
         console.log("没有tasks，list格式有问题");
       }
@@ -254,7 +205,7 @@ export default class util {
   static findAndAppend = function (data, id) {
     data = util.findAndDoThings(data, id, (node) => {
       node.tasks.push({
-        name: "",
+        name: "new",
         id: Date.now(),
         css: "",
         tasks: [],

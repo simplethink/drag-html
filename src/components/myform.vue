@@ -6,6 +6,7 @@
         <el-radio-group v-model="tag">
           <el-radio label="img"> </el-radio>
           <el-radio label="div"> </el-radio>
+          <el-radio label="span"> </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-for="(i, index) in arr" :key="index" :label="i.key">

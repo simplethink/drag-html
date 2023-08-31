@@ -10,7 +10,7 @@
     <nested-draggable
       :item="el"
       :tasks="el.tasks"
-      :src=" require('../assets/ab.png')"
+      :src="require('../assets/ab.png')"
       v-for="el in tasks"
       :key="el.id"
       :class="'c' + el.id"
