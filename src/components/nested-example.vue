@@ -3,7 +3,11 @@
     <!-- 按钮组 -->
     <el-button-group class="save">
       <el-button @click="save" type="primary">保存</el-button>
-      <el-button @click="list = []" type="primary">清空</el-button>
+      <el-button
+        @click="list = [{ name: 'new', id: 0, css: '', tasks: [] }]"
+        type="primary"
+        >清空</el-button
+      >
       <el-button @click="undo" type="primary">撤销</el-button>
       <el-dropdown split-button type="primary" @click="input">
         输入
@@ -103,8 +107,8 @@ export default {
         o
       ).tasks;
 
-       //暂存
-        util.setCacheTemp(this.list);
+      //暂存
+      util.setCacheTemp(this.list);
     });
   },
   computed: {
@@ -113,11 +117,11 @@ export default {
       return util.findNodeById(this.list, this.selIndex);
     },
   },
-   
+
   methods: {
-    undo(){
-      let i =util.getCache('tempHD')
-      this.list = i.pop()
+    undo() {
+      let i = util.getCache("tempHD");
+      this.list = i.pop();
     },
     menuSelect(id) {
       let a = document.querySelector(".c" + id).classList;
@@ -195,8 +199,8 @@ export default {
       }
       if (tag) sel.tag = tag;
       this.list = [...this.list];
-       //暂存
-        util.setCacheTemp(this.list);
+      //暂存
+      util.setCacheTemp(this.list);
     },
   },
 

@@ -21,30 +21,12 @@
       @contextmenu.native.prevent.stop="handleContextMenu($event, el)"
     >
     </nested-draggable>
-    <el-dialog
-      title="提示"
-      append-to-body
-      :visible.sync="dialogVisible"
-      width="30%"
-    >
-      <el-button type="danger" @click="delItem">删 除</el-button>
-      <el-button @click="appendChild">生蛋</el-button>
-      <el-input v-model="txtVal" placeholder="输入文本"></el-input>
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 2, maxRows: 14 }"
-        v-model="cssVal"
-        placeholder=""
-      ></el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="cmtCss">确 定</el-button>
-      </span>
-    </el-dialog>
   </draggable>
 </template>
 <script>
 import util from "../util";
 import draggable from "vuedraggable";
+import myDialog from "./myDialog";
 
 // import img from "../assets/aa.png";
 // 引入eleuif
@@ -76,43 +58,8 @@ export default {
       this.dialogVisible = false;
       util.eventbus.$emit("selOne", val);
     },
-    appendChild() {
-      this.dialogVisible = false;
-      util.eventbus.$emit("appendChild", { id: this.item.id });
-    },
-    delItem() {
-      this.$alert("确认删除？").then(() => {
-        this.dialogVisible = false;
-        util.eventbus.$emit("delItem", { id: this.item.id });
-      });
-    },
-    cmtCss() {
-      this.dialogVisible = false;
-      let target = util.objectToStyleString({
-        // ...util.cssToJs(this.item.css),
-        ...util.cssToJs(this.cssVal),
-      });
-      util.eventbus.$emit("commit", {
-        id: this.item.id,
-        css: target,
-        name: this.txtVal,
-      });
-    },
     handleDBC(el) {
-      this.dialogVisible = true;
-      this.cssVal = el.css;
-      this.txtVal = el.name;
-      this.item = el;
-      // this.$prompt("请输入css", el.name, { inputValue: el.css }).then(
-      //   ({ value }) => {
-      //     console.log(value);
-      //     let target = util.objectToStyleString({
-      //       ...util.cssToJs(el.css),
-      //       ...util.cssToJs(value),
-      //     });
-      //     util.eventbus.$emit("commit", { id: el.id, css: target });
-      //   }
-      // );
+      myDialog.open(el);
     },
     handleContextMenu(...event) {
       // event.preventDefault(); // 阻止默认的右键菜单弹出

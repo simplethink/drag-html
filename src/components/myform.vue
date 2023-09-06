@@ -14,13 +14,14 @@
           <el-radio v-for="j in i.value" :key="j" :label="j"></el-radio>
         </el-radio-group>
       </el-form-item>
-      <pre v-html="selTask.css"></pre>
+      <pre v-html="selTask.css" @dblclick="handleDB"></pre>
     </el-form>
   </div>
 </template>
 
 <script>
 import util from "../util";
+import mydialog from './myDialog';
 let unwatch = () => {};
 export default {
   data() {
@@ -30,6 +31,9 @@ export default {
     };
   },
   methods: {
+    handleDB(){
+      mydialog.open(this.selTask)
+    },
     init() {
       if (!this.selTask) return;
       unwatch();
