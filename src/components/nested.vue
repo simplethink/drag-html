@@ -75,7 +75,7 @@ export default {
   height: fit-content;
 }
 .dragArea {
-  height: 50px;
+  /* height: 50px; */
   outline: 1px dashed;
   box-sizing: border-box;
 }
